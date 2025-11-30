@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from "framer-motion"
-import { Mail, Heart } from "lucide-react";
+import { useMemo } from "react";
 
 function Snowflake({ size }: { size: number }) {
   return (
@@ -13,32 +13,42 @@ function Snowflake({ size }: { size: number }) {
   );
 }
 
+// Pre-generated snowflake positions to avoid hydration mismatch
+const snowflakeData = Array.from({ length: 15 }, (_, i) => ({
+  id: i,
+  left: (i * 7.14 + (i % 3) * 10) % 100,
+  size: 15 + (i % 3) * 5,
+  duration: 15 + (i % 5) * 3,
+  xOffset: (i % 2 === 0 ? 1 : -1) * (30 + (i % 4) * 10),
+}));
+
 export default function ChristmasGreeting() {
   return (
-    <div className="min-h-screen w-full bg-gradient-to-b from-red-900 via-green-950 via to-red-900 text-white">
+    <div className="min-h-screen w-full bg-gradient-to-b from-red-900 via-green-950 to-red-900 text-white">
       {/* Floating snowflakes decoration */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden z-20 w-full h-full">
-        {[...Array(20)].map((_, i) => (
+      <div className="fixed inset-0 pointer-events-none overflow-hidden z-20">
+        {snowflakeData.map((snow) => (
           <motion.div
-            key={i}
+            key={snow.id}
             className="absolute text-white/20"
-            initial={{ top: -20, left: `${Math.random() * 100}%` }}
+            style={{ left: `${snow.left}%` }}
+            initial={{ top: -20 }}
             animate={{
               top: '100vh',
-              x: [0, Math.random() * 100 - 50, 0],
+              x: [0, snow.xOffset, 0],
             }}
             transition={{
-              duration: Math.random() * 10 + 10,
+              duration: snow.duration,
               repeat: Infinity,
               ease: 'linear',
             }}
           >
-            <Snowflake size={Math.random() * 20 + 10} />
+            <Snowflake size={snow.size} />
           </motion.div>
         ))}
       </div>
 
-      <div className="relative z-5 w-full h-screen flex flex-col justify-center items-center px-6 py-6 overflow-hidden">
+      <div className="relative z-10 w-full h-screen flex flex-col justify-center items-center px-6 py-6 overflow-hidden">
         {/* Hero Section */}
         <motion.section
           className="text-center mb-4"
@@ -56,12 +66,12 @@ export default function ChristmasGreeting() {
           </motion.h1>
           
           <motion.p
-            className="text-base md:text-lg text-white max-w-2xl mx-auto leading-snug drop-shadow-md"
+            className="text-base md:text-lg text-white max-w-2xl mx-auto leading-snug drop-shadow-md p-4"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.5 }}
           >
-            Wishing you and your loved ones a season filled with joy, warmth, and wonderful memories.
+              Wishing you a season filled with  joy, love & hope 
           </motion.p>
         </motion.section>
 
@@ -76,26 +86,9 @@ export default function ChristmasGreeting() {
             <img
               src="/images/banner.png"
               alt="Christmas banner"
+              loading="eager"
+              fetchPriority="high"
               className="w-full h-auto max-h-full object-contain rounded-2xl shadow-2xl"
-            />
-          </div>
-        </motion.section>
-
-        {/* Hero Video */}
-        <motion.section
-          className="mb-16 flex justify-center"
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1, delay: 0.7 }}
-        >
-          <div className="relative w-full max-w-3xl h-[400px] md:h-[500px] rounded-2xl overflow-hidden shadow-2xl border-4 border-red-300/30">
-            <video
-              src="/images/christmasVideo.mp4"
-              className="w-full h-full object-cover"
-              autoPlay
-              loop
-              muted
-              playsInline
             />
           </div>
         </motion.section>
@@ -108,6 +101,7 @@ export default function ChristmasGreeting() {
           transition={{ duration: 1, delay: 1.7 }}
         >
           <p className="text-lg">
+          
              Christmas • 2025
           </p>
         </motion.footer>
