@@ -93,9 +93,28 @@ export default function ChristmasGreeting() {
           </div>
         </motion.section>
 
+        {/* Video Section */}
+        <motion.section
+          className="w-full max-w-2xl -mt-2 flex items-center justify-center"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1, delay: 0.8 }}
+        >
+          <div className="relative w-full h-48 md:h-64 rounded-xl overflow-hidden shadow-xl">
+            <video
+              src="/images/christmasVideo.mp4"
+              className="w-full h-full object-cover"
+              autoPlay
+              loop
+              muted
+              playsInline
+            />
+          </div>
+        </motion.section>
+
         {/* Footer */}
         <motion.footer
-          className="mt-16 text-center text-red-200/70"
+          className="mt-2 text-center text-red-200/70"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1, delay: 1.7 }}
